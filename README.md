@@ -5,4 +5,18 @@ For the original paper please refer to ["Fast and accurate multivariate Gaussian
 
 This version implements what is called the "slow fallback" in the original Julia implementation. 
 
+## Installation
+Runs in Python 3.6
+1. Make sure [cython](http://docs.cython.org/en/latest/src/quickstart/install.html) and [numpy]() are installed and up to date:
+... `pip install Cython`
+... `pip install numpy`
+2. Compile the cython source code:
+... `cd src`
+... `python setup.py build_ext -i`
+... `cd ..`
+
+## Usage
+```python src/gaussdca.py [-h] [-o OUTPUT] [-s SEPARATION] [-t THREADS] alignment_file```
+So far the alignment file needs to be in a3m format (with or without insertions). The output will be printed or saved into a file if given. Sequence separation and the number of threads for multiprocessing can be specified.
+
 TODO: implement the faster version with alignment compression.
