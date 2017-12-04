@@ -9,8 +9,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from _load_data import load_a3m
-from _gaussdca_parallel import compute_gdca_scores
-#from _gaussdca_parallel_opt import compute_gdca_scores
+#from _gaussdca_parallel import compute_gdca_scores
+from _gaussdca_parallel_opt import compute_gdca_scores
 
 def run_gdca(infile, outfile='', num_threads=1, min_separation=5):
         if not os.path.isfile(infile):
