@@ -108,7 +108,7 @@ cdef void _compute_freqs(int8[:, ::1] Z, int8 q, np.float64_t[::1] W, np.float64
     cdef int8 a, b
     
 
-    for i in parallel.prange(N, num_threads=num_threads, chunksize=10, schedule='static', nogil=True):
+    for i in parallel.prange(N, num_threads=num_threads, schedule='static', nogil=True):
         i0 = i * s
         for k in range(M):
             a = Z[i,k]
@@ -116,7 +116,7 @@ cdef void _compute_freqs(int8[:, ::1] Z, int8 q, np.float64_t[::1] W, np.float64
                 continue
             Pi[i0 + a - 1] += W[k]
 
-    for i in parallel.prange(N, num_threads=num_threads, chunksize=10, schedule='static', nogil=True):
+    for i in parallel.prange(N, num_threads=num_threads, schedule='static', nogil=True):
         i0 = i * s
         j0 = i0
         for j in range(i,N):
@@ -128,7 +128,7 @@ cdef void _compute_freqs(int8[:, ::1] Z, int8 q, np.float64_t[::1] W, np.float64
                 Pij[i0 + a - 1, j0 + b - 1] += W[k]
             j0 = j0 + s
  
-    for i in parallel.prange(Ns, num_threads=num_threads, chunksize=10, schedule='static', nogil=True):
+    for i in parallel.prange(Ns, num_threads=num_threads, schedule='static', nogil=True):
         Pi[i] /= Meff
         Pij[i,i] /= Meff
         for j in range(i+1, Ns):
