@@ -20,19 +20,17 @@ def read_ranking(infile):
                 score = float(l_arr[2])
                 score_lst.append((i-1,j-1,score))
                 N = max(N, i, j)
-        print(N)
-
         cmap = np.zeros((N,N))
         for (i, j, score) in score_lst:
             cmap[i,j] = score
             cmap[j,i] = cmap[i,j]
-        
         return cmap
 
+
 def plot_cmap_difference(cmap1, cmap2, outfile=''):
-        plt.imshow(cmap1 - cmap2, interpolation='none')
-        plt.colorbar()
-        plt.show()
+    plt.imshow(cmap1 - cmap2, interpolation='none')
+    plt.colorbar()
+    plt.show()
 
 
 if __name__ == "__main__":
@@ -45,4 +43,5 @@ if __name__ == "__main__":
     cmap1 = read_ranking(args['score_file1'])
     cmap2 = read_ranking(args['score_file2'])
 
-    plot_cmap_difference(cmap1, cmap2, outfile=args['output'])
+    #plot_cmap_difference(cmap1, cmap2, outfile=args['output'])
+    print("Average difference to reference: %s" % np.mean(cmap1 - cmap2))
