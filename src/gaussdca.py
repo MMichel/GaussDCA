@@ -21,7 +21,7 @@ def run_gdca(infile, outfile='', num_threads=1, min_separation=5):
         gdca = gdca_dict["gdca"]
         gdca_corr = gdca_dict["gdca_corr"]
 
-        score_lst = compute_ranking(gdca_corr, outfile)
+        score_lst = compute_ranking(gdca_corr, outfile, min_separation=min_separation)
 
         if outfile:
             with open(outfile, 'w') as outf:
