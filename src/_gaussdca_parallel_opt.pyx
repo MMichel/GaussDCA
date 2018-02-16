@@ -94,7 +94,6 @@ cdef np.float64_t _compute_weights(int8[::1, :] ZZ, np.float64_t theta, int N, i
 cdef void _compute_freqs(int8[:, ::1] Z, int8 q, np.float64_t[::1] W, np.float64_t Meff, int num_threads,
                                 np.float64_t[::1] Pi,
                                 np.float64_t[:, ::1] Pij) nogil:
-                                #np.float64_t[:, ::1] Pij,):
     cdef Py_ssize_t N = Z.shape[0]
     cdef Py_ssize_t M = Z.shape[1]
     cdef int8 s = q - 1
@@ -107,14 +106,12 @@ cdef void _compute_freqs(int8[:, ::1] Z, int8 q, np.float64_t[::1] W, np.float64
     cdef Py_ssize_t i0, j0, i, j, k
     cdef int8 a, b
     
-
     for i in parallel.prange(N, num_threads=num_threads, schedule='static', nogil=True):
         i0 = i * s
         for k in range(M):
             a = Z[i,k]
-            # Optimization: use implicit boolean test instead of explicit if branch
-            #if a == q:
-            #    continue
+            if a == q:
+                continue
             Pi[i0 + a - 1] += W[k] * (a != q)
 
     for i in parallel.prange(N, num_threads=num_threads, schedule='static', nogil=True):
@@ -124,9 +121,8 @@ cdef void _compute_freqs(int8[:, ::1] Z, int8 q, np.float64_t[::1] W, np.float64
             for k in range(M):
                 a = Z[i,k]
                 b = Z[j,k]
-                # Optimization: use implicit boolean test instead of explicit if branch
-                #if a == q or b == q:
-                #    continue
+                if a == q or b == q:
+                    continue
                 Pij[i0 + a - 1, j0 + b - 1] += W[k] * (a != q) * (b != q)
             j0 = j0 + s
  
@@ -157,6 +153,7 @@ cdef void _compute_new_frequencies(int8[:, ::1] alignment, int8 q, np.float64_t 
     Meff = _compute_weights(alignment_f, theta, N, M, num_threads, W)
     print("M = %s N = %s Meff = %s" % (M, N, Meff))
     _compute_freqs(alignment, q, W, Meff, num_threads, Pi_true, Pij_true)
+
 
 
 cdef void _add_pseudocount(np.float64_t[::1] Pi_true, np.float64_t[:, ::1] Pij_true, np.float64_t pc, int N, int8 q,
